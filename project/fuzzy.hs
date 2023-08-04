@@ -1,10 +1,16 @@
+module Fuzzy where
+
+-- -- 2 Fuzzy logic
+-- Basic operators defined for fuzzy logic application
 import Prelude hiding ((&&), (||), not, and, or , any, all)
 
+-- Fuzzy variable class allows shadowing of standard operators for fuzzy variables ONLY
 class Logic a where
     true, false :: a
     (&&), (||)  :: a -> a -> a
     not         :: a -> a
 
+-- overloading standard operators to work on fuzzy instances of Logic class
 and, or :: Logic a => [a] -> a
 and      = foldr (&&) true
 or       = foldr (||) false
@@ -13,6 +19,7 @@ any, all :: Logic b => (a -> b) -> [a] -> b
 any p     = or . map p
 all p     = and . map p
 
+-- fuzzy instances of Logic class
 instance Logic Double where
     true     = 1
     false    = 0
@@ -20,7 +27,7 @@ instance Logic Double where
     (||)     = max
     not x    = 1 - x
 
--- Bool custom
+-- rebuilt using descriptions provided in research paper
 instance Logic Bool where
     true       = True
     false      = False
@@ -149,3 +156,4 @@ medmax dom f = median (maxima dom f)
   qsort []     = []
   qsort (x:xs) = qsort [y | y <- xs, y <= x] ++ [x] ++
                  qsort [y | y <- xs, y > x]
+
